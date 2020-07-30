@@ -1,6 +1,7 @@
 package config
 
 import (
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
@@ -30,7 +31,7 @@ type Config struct {
 	Log        Log
 	GrpcServer GrpcServer `mapstructure:"grpc_server"`
 	PSQL       PSQL
-	RateLimit  RateLimit
+	RateLimit  RateLimit `mapstructure:"ratelimits"`
 }
 
 type PSQL struct {
@@ -50,4 +51,15 @@ type RateLimit struct {
 	Password int
 	IP       int
 	Duration int64
+}
+
+func (cfg *Config) Fields() log.Fields {
+	return log.Fields{
+		"server_addr":   cfg.GrpcServer.Addr,
+		"login_rate":    cfg.RateLimit.Login,
+		"passwd_rate":   cfg.RateLimit.Password,
+		"ip_rate":       cfg.RateLimit.IP,
+		"rate_duration": cfg.RateLimit.Duration,
+		"log_level":     cfg.Log.LogLevel,
+	}
 }

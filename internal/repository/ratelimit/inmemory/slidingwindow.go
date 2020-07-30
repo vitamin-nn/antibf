@@ -10,9 +10,10 @@ type SlidingWindow struct {
 }
 
 func NewSlidingWindow() *SlidingWindow {
-	sw := new(SlidingWindow)
-	sw.data = make(map[string]map[int64]int)
-	return sw
+	return &SlidingWindow{
+		data:  make(map[string]map[int64]int),
+		mutex: new(sync.Mutex),
+	}
 }
 
 func (sw *SlidingWindow) GetRate(key string, startTimestamp int64) int {
@@ -38,6 +39,11 @@ func (sw *SlidingWindow) GetRate(key string, startTimestamp int64) int {
 func (sw *SlidingWindow) Increment(key string, timestamp int64) {
 	sw.mutex.Lock()
 	defer sw.mutex.Unlock()
+
+	_, ok := sw.data[key]
+	if !ok {
+		sw.data[key] = make(map[int64]int)
+	}
 
 	sw.data[key][timestamp]++
 }

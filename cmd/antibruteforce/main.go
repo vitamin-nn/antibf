@@ -31,6 +31,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("initialize logger error: %v", err)
 	}
+	log.WithFields(cfg.Fields()).Info("Starting antibruteforce service")
 
 	loginLimit := ratelimit.NewRateLimit(rlMemRepo.NewSlidingWindow(), cfg.RateLimit.Login, cfg.RateLimit.Duration)
 	passwdLimit := ratelimit.NewRateLimit(rlMemRepo.NewSlidingWindow(), cfg.RateLimit.Password, cfg.RateLimit.Duration)
