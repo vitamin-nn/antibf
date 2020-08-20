@@ -8,18 +8,15 @@ import (
 
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgtype"
-	_ "github.com/jackc/pgx/v4/stdlib"
+	_ "github.com/jackc/pgx/v4/stdlib" // pg driver
 	outErr "github.com/vitamin-nn/otus_anti_bruteforce/internal/error"
 )
 
 const (
 	ConstraintViolationCode = "23"
+	WhiteListTable          = "ip_white_list"
+	BlackListTable          = "ip_black_list"
 )
-
-var settingTableList = map[string]string{
-	"white": "ip_white_list",
-	"black": "ip_black_list",
-}
 
 type Psql struct {
 	dsn string
@@ -47,36 +44,40 @@ func (sr *Psql) Close() error {
 }
 
 func (sr *Psql) AddToWhiteList(ctx context.Context, inet *net.IPNet) error {
-	return sr.addToList(ctx, inet, getWhiteTableName())
+	return sr.addToList(ctx, inet, WhiteListTable)
 }
 
 func (sr *Psql) AddToBlackList(ctx context.Context, inet *net.IPNet) error {
-	return sr.addToList(ctx, inet, getBlackTableName())
+	return sr.addToList(ctx, inet, BlackListTable)
 }
 
 func (sr *Psql) DeleteFromWhiteList(ctx context.Context, inet *net.IPNet) error {
-	return sr.deleteFromList(ctx, inet, getWhiteTableName())
+	return sr.deleteFromList(ctx, inet, WhiteListTable)
 }
 
 func (sr *Psql) DeleteFromBlackList(ctx context.Context, inet *net.IPNet) error {
-	return sr.deleteFromList(ctx, inet, getBlackTableName())
+	return sr.deleteFromList(ctx, inet, BlackListTable)
 }
 
 func (sr *Psql) GetWhiteList(ctx context.Context) ([]*net.IPNet, error) {
-	return sr.getNetList(ctx, getWhiteTableName())
+	return sr.getNetList(ctx, WhiteListTable)
 }
 
 func (sr *Psql) GetBlackList(ctx context.Context) ([]*net.IPNet, error) {
-	return sr.getNetList(ctx, getBlackTableName())
+	return sr.getNetList(ctx, BlackListTable)
 }
 
 func (sr *Psql) getNetList(ctx context.Context, tableName string) ([]*net.IPNet, error) {
+	sql := fmt.Sprintf("SELECT ip_network FROM %s", tableName) // nolint: gosec
 	// теортически, здесь в базе может быть очень много настроек для белых/черных списков
 	// и тогда, наверное, лучше возвращать ссылку на курсор,
 	// но, во-первых, такое все же маловероятно,
-	// а во вторых - в таком случае реализация с хранением в памяти не подходит;
+	// а во вторых - в таком случае реализация с хранением в памяти может не подойти;
 	// поэтому с курсором здесь не вижу смысла заморачиваться
-	rows, err := sr.db.QueryContext(ctx, fmt.Sprintf("SELECT ip_network FROM %s", tableName))
+
+	// здесь не нашел другого решения для того чтобы линтер не ругался на sprintf для таблицы
+	// пробовал испльзовать pgx.Identifier.Sanitize(), но линтер на это не обращает внимания
+	rows, err := sr.db.QueryContext(ctx, sql)
 	if err != nil {
 		return nil, err
 	}
@@ -99,11 +100,8 @@ func (sr *Psql) getNetList(ctx context.Context, tableName string) ([]*net.IPNet,
 }
 
 func (sr *Psql) addToList(ctx context.Context, inet *net.IPNet, tableName string) error {
-	_, err := sr.db.ExecContext(
-		ctx,
-		fmt.Sprintf("INSERT INTO %s(ip_network) VALUES($1) RETURNING id", tableName),
-		inet.String(),
-	)
+	sql := fmt.Sprintf("INSERT INTO %s(ip_network) VALUES($1) RETURNING id", tableName) // nolint: gosec
+	_, err := sr.db.ExecContext(ctx, sql, inet)
 	if err != nil {
 		specErr := getSpecificError(err)
 		if specErr == nil {
@@ -116,11 +114,8 @@ func (sr *Psql) addToList(ctx context.Context, inet *net.IPNet, tableName string
 }
 
 func (sr *Psql) deleteFromList(ctx context.Context, inet *net.IPNet, tableName string) error {
-	res, err := sr.db.ExecContext(
-		ctx,
-		fmt.Sprintf("DELETE FROM %s WHERE ip_network = $1", tableName),
-		inet,
-	)
+	sql := fmt.Sprintf("DELETE FROM %s WHERE ip_network = $1", tableName) // nolint: gosec
+	res, err := sr.db.ExecContext(ctx, sql, inet)
 	if err != nil {
 		return fmt.Errorf("delete from events error: %v", err)
 	}
@@ -143,12 +138,4 @@ func getSpecificError(err error) error {
 		}
 	}
 	return nil
-}
-
-func getWhiteTableName() string {
-	return settingTableList["white"]
-}
-
-func getBlackTableName() string {
-	return settingTableList["black"]
 }

@@ -43,7 +43,17 @@ func TestRateLimit(t *testing.T) {
 		rLimit.Clear(key1)
 		require.True(t, rLimit.Allow(key1))
 	})
-	t.Run("goroutine safe", func(t *testing.T) {
+}
+
+func TestRateLimitConcurrent(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	limit := 3
+	rd, _ := time.ParseDuration("2s")
+	key := "key"
+
+	t.Run("concurrent safe", func(t *testing.T) {
 		rLimit := NewRateLimit(ctx, limit, rd)
 
 		ch := make(chan bool)
@@ -53,7 +63,7 @@ func TestRateLimit(t *testing.T) {
 		for j := 0; j < goroutineCnt; j++ {
 			go func() {
 				for i := 0; i < limit; i++ {
-					ch <- rLimit.Allow(key1)
+					ch <- rLimit.Allow(key)
 				}
 				wg.Done()
 			}()

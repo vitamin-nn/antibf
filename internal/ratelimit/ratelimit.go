@@ -26,7 +26,7 @@ type RateLimiter struct {
 
 // NewRateLimit
 // limit - maximum amount of request per rd interval
-// rd - rate duration
+// rd - rate duration.
 func NewRateLimit(ctx context.Context, limit int, rd time.Duration) *RateLimit {
 	r := &RateLimit{
 		mutex: new(sync.Mutex),

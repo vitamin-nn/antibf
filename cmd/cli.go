@@ -13,16 +13,9 @@ import (
 	"google.golang.org/grpc"
 )
 
-//var grpcConn *grpc.ClientConn
-//var grpcClient grpcService.AntiBruteforceServiceClient
-
 type modifyFunc func(context.Context, *grpcService.ModifyListRequest, ...grpc.CallOption) (*grpcService.ModifyResponse, error)
 
-var ip string
-
 func cliCmd(cfg *config.Config) *cobra.Command {
-	var login string
-
 	cliCmd := &cobra.Command{
 		Use:   "cli",
 		Short: "Command line interface for managing of antibf service",
@@ -30,8 +23,29 @@ func cliCmd(cfg *config.Config) *cobra.Command {
 			log.Fatalf("Please specify cli-command")
 		},
 	}
+	clearCmd := getClearCmd(cfg)
+	cliCmd.AddCommand(clearCmd)
 
-	clearCmd := &cobra.Command{
+	addWhiteCmd := getAddWhiteCmd(cfg)
+	cliCmd.AddCommand(addWhiteCmd)
+
+	removeWhiteCmd := getRemoveWhiteCmd(cfg)
+	cliCmd.AddCommand(removeWhiteCmd)
+
+	addBlackCmd := getAddBlackCmd(cfg)
+	cliCmd.AddCommand(addBlackCmd)
+
+	removeBlackCmd := getRemoveBlackCmd(cfg)
+	cliCmd.AddCommand(removeBlackCmd)
+
+	return cliCmd
+}
+
+func getClearCmd(cfg *config.Config) *cobra.Command {
+	var ip string
+	var login string
+
+	cmd := &cobra.Command{
 		Use:   "clear",
 		Short: "Clears specified bucket",
 		Run: func(cmd *cobra.Command, args []string) {
@@ -53,11 +67,14 @@ func cliCmd(cfg *config.Config) *cobra.Command {
 			processGrpcResponse(resp)
 		},
 	}
-	clearCmd.Flags().StringVar(&login, "login", "", "Login that will cleared")
-	clearCmd.Flags().StringVar(&ip, "ip", "", "IP that will cleared")
-	cliCmd.AddCommand(clearCmd)
+	cmd.Flags().StringVar(&login, "login", "", "Login that will cleared")
+	cmd.Flags().StringVar(&ip, "ip", "", "IP that will cleared")
+	return cmd
+}
 
-	addWhiteCmd := &cobra.Command{
+func getAddWhiteCmd(cfg *config.Config) *cobra.Command {
+	var ip string
+	cmd := &cobra.Command{
 		Use:   "addwhite",
 		Short: "Adds ip network to the white list",
 		Run: func(cmd *cobra.Command, args []string) {
@@ -67,10 +84,17 @@ func cliCmd(cfg *config.Config) *cobra.Command {
 			modifyList(grpcClient.AddToWhiteList, ip)
 		},
 	}
-	addIpFlag(addWhiteCmd)
-	cliCmd.AddCommand(addWhiteCmd)
+	cmd.Flags().StringVar(&ip, "ip", "", "IP network")
+	err := cmd.MarkFlagRequired("ip")
+	if err != nil {
+		log.Fatalf("Marking flag required error: %v", err)
+	}
+	return cmd
+}
 
-	removeWhiteCmd := &cobra.Command{
+func getRemoveWhiteCmd(cfg *config.Config) *cobra.Command {
+	var ip string
+	cmd := &cobra.Command{
 		Use:   "rmwhite",
 		Short: "Remove ip network from the white list",
 		Run: func(cmd *cobra.Command, args []string) {
@@ -80,10 +104,17 @@ func cliCmd(cfg *config.Config) *cobra.Command {
 			modifyList(grpcClient.RemoveFromWhiteList, ip)
 		},
 	}
-	addIpFlag(removeWhiteCmd)
-	cliCmd.AddCommand(removeWhiteCmd)
+	cmd.Flags().StringVar(&ip, "ip", "", "IP network")
+	err := cmd.MarkFlagRequired("ip")
+	if err != nil {
+		log.Fatalf("Marking flag required error: %v", err)
+	}
+	return cmd
+}
 
-	addBlackCmd := &cobra.Command{
+func getAddBlackCmd(cfg *config.Config) *cobra.Command {
+	var ip string
+	cmd := &cobra.Command{
 		Use:   "addblack",
 		Short: "Adds ip network to the black list",
 		Run: func(cmd *cobra.Command, args []string) {
@@ -93,10 +124,17 @@ func cliCmd(cfg *config.Config) *cobra.Command {
 			modifyList(grpcClient.AddToBlackList, ip)
 		},
 	}
-	addIpFlag(addBlackCmd)
-	cliCmd.AddCommand(addBlackCmd)
+	cmd.Flags().StringVar(&ip, "ip", "", "IP network")
+	err := cmd.MarkFlagRequired("ip")
+	if err != nil {
+		log.Fatalf("Marking flag required error: %v", err)
+	}
+	return cmd
+}
 
-	removeBlackCmd := &cobra.Command{
+func getRemoveBlackCmd(cfg *config.Config) *cobra.Command {
+	var ip string
+	cmd := &cobra.Command{
 		Use:   "rmblack",
 		Short: "Remove ip network from the black list",
 		Run: func(cmd *cobra.Command, args []string) {
@@ -106,10 +144,12 @@ func cliCmd(cfg *config.Config) *cobra.Command {
 			modifyList(grpcClient.RemoveFromBlackList, ip)
 		},
 	}
-	addIpFlag(removeBlackCmd)
-	cliCmd.AddCommand(removeBlackCmd)
-
-	return cliCmd
+	cmd.Flags().StringVar(&ip, "ip", "", "IP network")
+	err := cmd.MarkFlagRequired("ip")
+	if err != nil {
+		log.Fatalf("Marking flag required error: %v", err)
+	}
+	return cmd
 }
 
 func getGrpcConn(grpcAddr string) *grpc.ClientConn {
@@ -141,12 +181,4 @@ func modifyList(f modifyFunc, ip string) {
 		log.Fatalf("Grpc request transport error: %v", err)
 	}
 	processGrpcResponse(resp)
-}
-
-func addIpFlag(cmd *cobra.Command) {
-	cmd.Flags().StringVar(&ip, "ip", "", "IP network")
-	err := cmd.MarkFlagRequired("ip")
-	if err != nil {
-		log.Fatalf("Marking flag ruquired error: %v", err)
-	}
 }
