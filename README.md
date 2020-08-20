@@ -4,7 +4,7 @@ The service was made to control the rate of authentication requests.
 Based on the loginning user data (login, password, ip) and service settings it defines whether the request is a brute force attempt.
 The service works with GRPC and Command line interfaces.
 
-The service is developed as final project of "Golang developer" course (by Otus)
+The service is developed as final project of "Golang developer" course (by Otus). For more information see: https://github.com/OtusGolang/final_project/blob/master/01-anti-bruteforce.md
 
 ## Main Service
 ### Running
@@ -19,10 +19,10 @@ The service is developed as final project of "Golang developer" course (by Otus)
 2. Run command: `.bin/antibf cli [command] [params]`
 
 Available Commands:
-  addblack    Adds ip network to the black list ()
-  addwhite    Adds ip network to the white list
-  clear       Clears specified bucket
-  rmblack     Remove ip network from the black list
-  rmwhite     Remove ip network from the white list
+-  addblack: adds ip network to the black list ()
+-  addwhite: adds ip network to the white list
+-  clear: clears specified bucket
+-  rmblack: remove ip network from the black list
+-  rmwhite: remove ip network from the white list
   
 Required params for command would be view by typing: `.bin/antibf cli [command] --help`
