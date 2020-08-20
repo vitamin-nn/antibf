@@ -2,14 +2,16 @@
 ## Overview
 The service was made to control the rate of authentication requests.
 Based on the loginning user data (login, password, ip) and service settings it defines whether the request is a brute force attempt.
+The service works with grpc and command line interfaces.
 
 The service is developed as final project of "Golang developer" course (by Otus)
 
-## Running
+## Main Service
+### Running
 1. Clone project
 2. `make run`
 
-## Finish work
+### Finish work
 `make down`
 
 ## Cli interface
