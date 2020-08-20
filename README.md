@@ -1,8 +1,8 @@
-# Anti bruteforce Service
+# Anti bruteforce service
 [![Build Status](https://travis-ci.com/vitamin-nn/otus_anti_bruteforce.svg?branch=master)](https://travis-ci.com/vitamin-nn/otus_anti_bruteforce)
 ## Overview
 The service was made to control the rate of authentication requests.
-Based on the loginning user data (login, password, ip) and service settings it defines whether the request is a brute force attempt.
+Based on the loginning user data (login, password, ip) and service settings it defines whether the request is a bruteforce attempt.
 The service works with GRPC and Command line interfaces.
 
 The service is developed as final project of "Golang developer" course (by Otus). For more information see: https://github.com/OtusGolang/final_project/blob/master/01-anti-bruteforce.md
