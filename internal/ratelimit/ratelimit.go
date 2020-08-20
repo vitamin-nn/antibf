@@ -35,6 +35,7 @@ func NewRateLimit(ctx context.Context, limit int, rd time.Duration) *RateLimit {
 		data:  make(map[string]*RateLimiter),
 	}
 	go r.cleanupOld(ctx)
+
 	return r
 }
 
@@ -44,6 +45,7 @@ func (rl *RateLimit) Allow(key string) bool {
 
 	r := rl.getLimiter(key)
 	r.lastSeen = time.Now()
+
 	return r.limiter.Allow()
 }
 
@@ -61,6 +63,7 @@ func (rl *RateLimit) getLimiter(key string) *RateLimiter {
 		}
 		rl.data[key] = r
 	}
+
 	return r
 }
 

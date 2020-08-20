@@ -13,6 +13,7 @@ func Load() (*Config, error) {
 	if err := env.Parse(cfg); err != nil {
 		return nil, err
 	}
+
 	return cfg, nil
 }
 

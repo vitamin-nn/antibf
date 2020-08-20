@@ -3,11 +3,9 @@ package cmd
 import (
 	"context"
 	"fmt"
-
 	"log"
 
 	"github.com/spf13/cobra"
-
 	"github.com/vitamin-nn/otus_anti_bruteforce/internal/config"
 	grpcService "github.com/vitamin-nn/otus_anti_bruteforce/internal/grpc"
 	"google.golang.org/grpc"
@@ -69,6 +67,7 @@ func getClearCmd(cfg *config.Config) *cobra.Command {
 	}
 	cmd.Flags().StringVar(&login, "login", "", "Login that will cleared")
 	cmd.Flags().StringVar(&ip, "ip", "", "IP that will cleared")
+
 	return cmd
 }
 
@@ -89,6 +88,7 @@ func getAddWhiteCmd(cfg *config.Config) *cobra.Command {
 	if err != nil {
 		log.Fatalf("Marking flag required error: %v", err)
 	}
+
 	return cmd
 }
 
@@ -109,6 +109,7 @@ func getRemoveWhiteCmd(cfg *config.Config) *cobra.Command {
 	if err != nil {
 		log.Fatalf("Marking flag required error: %v", err)
 	}
+
 	return cmd
 }
 
@@ -129,6 +130,7 @@ func getAddBlackCmd(cfg *config.Config) *cobra.Command {
 	if err != nil {
 		log.Fatalf("Marking flag required error: %v", err)
 	}
+
 	return cmd
 }
 
@@ -149,6 +151,7 @@ func getRemoveBlackCmd(cfg *config.Config) *cobra.Command {
 	if err != nil {
 		log.Fatalf("Marking flag required error: %v", err)
 	}
+
 	return cmd
 }
 
@@ -157,6 +160,7 @@ func getGrpcConn(grpcAddr string) *grpc.ClientConn {
 	if err != nil {
 		log.Fatalf("Could not connect: %v", err)
 	}
+
 	return grpcConn
 }
 

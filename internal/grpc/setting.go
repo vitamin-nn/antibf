@@ -44,6 +44,7 @@ func (s *AntibruteforceServer) modify(ctx context.Context, req *ModifyListReques
 				Error: oErr.Error(),
 			},
 		}
+
 		return resp, nil
 	}
 
@@ -52,5 +53,6 @@ func (s *AntibruteforceServer) modify(ctx context.Context, req *ModifyListReques
 			Success: true,
 		},
 	}
+
 	return resp, nil
 }

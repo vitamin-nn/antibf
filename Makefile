@@ -19,15 +19,12 @@ build-docker-int-tests:
 	docker build -f ./integration-test.Dockerfile -t antibruteforce/integration-tests ./
 
 test:
-	go test -race -short -v ./...
+	go test -v -count=1 -race -gcflags=-l -timeout=30s ./...
 
 test-integration: build-docker-server build-docker-migrate build-docker-int-tests
 	./scripts/run_int_tests.sh
 
-install-lint:
-	curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $(GOPATH)/bin v1.27.0
-
-lint: install-lint
+lint:
 	golangci-lint run ./...
 
 build:

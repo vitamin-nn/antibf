@@ -19,6 +19,7 @@ func NewAntibruteforceServer(rUseCase *usecase.RateLimitUseCase, sUseCase *useca
 	s := new(AntibruteforceServer)
 	s.rUseCase = rUseCase
 	s.sUseCase = sUseCase
+
 	return s
 }
 
@@ -29,6 +30,7 @@ func (s *AntibruteforceServer) Run(addr string) error {
 		return err
 	}
 	RegisterAntiBruteforceServiceServer(gs, s)
+
 	return gs.Serve(l)
 }
 
@@ -45,6 +47,7 @@ func unaryInterceptor() grpc.ServerOption {
 		if err != nil {
 			log.Errorf("method %q throws error: %v", info.FullMethod, err)
 		}
+
 		return resp, err
 	})
 }

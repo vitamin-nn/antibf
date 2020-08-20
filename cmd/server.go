@@ -7,7 +7,6 @@ import (
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-
 	"github.com/vitamin-nn/otus_anti_bruteforce/internal/config"
 	"github.com/vitamin-nn/otus_anti_bruteforce/internal/grpc"
 	"github.com/vitamin-nn/otus_anti_bruteforce/internal/ratelimit"

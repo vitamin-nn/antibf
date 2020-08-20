@@ -46,6 +46,7 @@ func (uc RateLimitUseCase) CheckRequest(ctx context.Context, login, passwd strin
 	if !uc.rlLogin.Allow(login) || !uc.rlPasswd.Allow(passwd) || !uc.rlIP.Allow(ip.String()) {
 		return false, nil
 	}
+
 	return true, nil
 }
 
@@ -57,5 +58,6 @@ func (uc RateLimitUseCase) ClearRequest(ctx context.Context, login string, ip ne
 	if ip != nil {
 		uc.rlIP.Clear(ip.String())
 	}
+
 	return nil
 }

@@ -26,6 +26,7 @@ func (s *Cache) CheckInWhiteList(ctx context.Context, ip net.IP) (bool, error) {
 			return true, nil
 		}
 	}
+
 	return false, nil
 }
 
@@ -37,6 +38,7 @@ func (s *Cache) CheckInBlackList(ctx context.Context, ip net.IP) (bool, error) {
 			return true, nil
 		}
 	}
+
 	return false, nil
 }
 

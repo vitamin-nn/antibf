@@ -6,7 +6,6 @@ import (
 	"time"
 
 	log "github.com/sirupsen/logrus"
-
 	"github.com/vitamin-nn/otus_anti_bruteforce/internal/repository/setting/cache"
 	"github.com/vitamin-nn/otus_anti_bruteforce/internal/repository/setting/psql"
 )
@@ -39,6 +38,7 @@ func NewSettingRepo(ctx context.Context, psqlRepo *psql.Psql, cacheUpdInterval t
 			}
 		}
 	}()
+
 	return s
 }
 
@@ -89,5 +89,6 @@ func (s *Setting) UpdateCache(ctx context.Context) error {
 	c.SetWhiteList(whiteList)
 	c.SetBlackList(blackList)
 	s.cache = c
+
 	return nil
 }

@@ -36,6 +36,7 @@ func (s *AntibruteforceServer) Check(ctx context.Context, req *CheckRequest) (*C
 				Error: oErr.Error(),
 			},
 		}
+
 		return resp, nil
 	}
 
@@ -44,6 +45,7 @@ func (s *AntibruteforceServer) Check(ctx context.Context, req *CheckRequest) (*C
 			Ok: ok,
 		},
 	}
+
 	return resp, nil
 }
 
@@ -67,6 +69,7 @@ func (s *AntibruteforceServer) Clear(ctx context.Context, req *ClearRequest) (*M
 				Error: oErr.Error(),
 			},
 		}
+
 		return resp, nil
 	}
 
@@ -75,5 +78,6 @@ func (s *AntibruteforceServer) Clear(ctx context.Context, req *ClearRequest) (*M
 			Success: true,
 		},
 	}
+
 	return resp, nil
 }

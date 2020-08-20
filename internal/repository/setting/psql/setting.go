@@ -8,7 +8,9 @@ import (
 
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgtype"
-	_ "github.com/jackc/pgx/v4/stdlib" // pg driver
+
+	// PG driver.
+	_ "github.com/jackc/pgx/v4/stdlib"
 	outErr "github.com/vitamin-nn/otus_anti_bruteforce/internal/error"
 )
 
@@ -36,6 +38,7 @@ func (sr *Psql) Connect(ctx context.Context) error {
 	}
 	sr.db = db
 	sr.db.Stats()
+
 	return sr.db.PingContext(ctx)
 }
 
@@ -68,6 +71,8 @@ func (sr *Psql) GetBlackList(ctx context.Context) ([]*net.IPNet, error) {
 }
 
 func (sr *Psql) getNetList(ctx context.Context, tableName string) ([]*net.IPNet, error) {
+	// здесь не нашел другого решения для того чтобы линтер не ругался на sprintf для вставки имени таблицы
+	// пробовал испльзовать pgx.Identifier.Sanitize(), но линтер на это не обращает внимания
 	sql := fmt.Sprintf("SELECT ip_network FROM %s", tableName) // nolint: gosec
 	// теортически, здесь в базе может быть очень много настроек для белых/черных списков
 	// и тогда, наверное, лучше возвращать ссылку на курсор,
@@ -75,8 +80,6 @@ func (sr *Psql) getNetList(ctx context.Context, tableName string) ([]*net.IPNet,
 	// а во вторых - в таком случае реализация с хранением в памяти может не подойти;
 	// поэтому с курсором здесь не вижу смысла заморачиваться
 
-	// здесь не нашел другого решения для того чтобы линтер не ругался на sprintf для таблицы
-	// пробовал испльзовать pgx.Identifier.Sanitize(), но линтер на это не обращает внимания
 	rows, err := sr.db.QueryContext(ctx, sql)
 	if err != nil {
 		return nil, err
@@ -96,17 +99,19 @@ func (sr *Psql) getNetList(ctx context.Context, tableName string) ([]*net.IPNet,
 
 		netList = append(netList, net.IPNet)
 	}
+
 	return netList, rows.Err()
 }
 
 func (sr *Psql) addToList(ctx context.Context, inet *net.IPNet, tableName string) error {
-	sql := fmt.Sprintf("INSERT INTO %s(ip_network) VALUES($1) RETURNING id", tableName) // nolint: gosec
+	sql := fmt.Sprintf("INSERT INTO %s(ip_network) VALUES($1) RETURNING id", tableName)
 	_, err := sr.db.ExecContext(ctx, sql, inet)
 	if err != nil {
 		specErr := getSpecificError(err)
 		if specErr == nil {
 			specErr = fmt.Errorf("insert error: %v", err)
 		}
+
 		return specErr
 	}
 
@@ -114,7 +119,7 @@ func (sr *Psql) addToList(ctx context.Context, inet *net.IPNet, tableName string
 }
 
 func (sr *Psql) deleteFromList(ctx context.Context, inet *net.IPNet, tableName string) error {
-	sql := fmt.Sprintf("DELETE FROM %s WHERE ip_network = $1", tableName) // nolint: gosec
+	sql := fmt.Sprintf("DELETE FROM %s WHERE ip_network = $1", tableName)
 	res, err := sr.db.ExecContext(ctx, sql, inet)
 	if err != nil {
 		return fmt.Errorf("delete from events error: %v", err)
@@ -137,5 +142,6 @@ func getSpecificError(err error) error {
 			return outErr.ErrINetAlreadySet
 		}
 	}
+
 	return nil
 }
