@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+    server:
+        image: antibruteforce/server
+        restart: always
+        container_name: "antibruteforce-tests"
+        ports:
+            - 8082:8081
+        depends_on:
+            - migration
+        env_file:
+            - env/database.int-tests.env
+            - env/server.int-tests.env
+        environment:
+            - POSTGRES_DB_HOST=db-test
+    db-test:
+        image: postgres:12
+        container_name: "antibruteforce-db-tests"
+        ports:
+            - "5433:5432"
+        env_file:
+            - env/database.int-tests.env
+        volumes:
+            - ../build/db/init.dev.sql:/docker-entrypoint-initdb.d/init.sql
+    migration:
+        image: antibruteforce/migrate
+        container_name: "antibruteforce-migration-tests"
+        depends_on:
+            - db-test
+        env_file:
+            - env/database.int-tests.env
+        environment:
+            - POSTGRES_DB_HOST=db-test
+    integration-tests:
+        image: antibruteforce/integration-tests
+        container_name: "antibruteforce-integration-tests"
+        depends_on:
+            - server
+        env_file:
+            - env/database.int-tests.env
+            - env/server.int-tests.env
+        environment:
+            - POSTGRES_DB_HOST=db-test
+            - GRPC_SERVER_ADDR=server:8081

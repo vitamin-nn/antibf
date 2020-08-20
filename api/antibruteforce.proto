@@ -4,19 +4,40 @@ syntax = "proto3";
 
 option go_package=".;grpc";
 
-message CheckAuthRequest {
+message CheckRequest {
     string login = 1;
     string password = 2;
     string ip = 3;
 }
 
-message CheckAuthResponse {
+message CheckResponse {
     oneof result {
         bool ok = 1;
         string error = 2;
     }
 }
 
+message ClearRequest {
+    string login = 1;
+    string ip = 2;
+}
+
+message ModifyListRequest {
+    string ip = 1;
+}
+
+message ModifyResponse {
+    oneof result {
+        bool success = 1;
+        string error = 2;
+    }
+}
+
 service AntiBruteforceService {
-    rpc CheckRequest(CheckAuthRequest) returns (CheckAuthResponse) {}
+    rpc Check(CheckRequest) returns (CheckResponse) {}
+    rpc Clear(ClearRequest) returns (ModifyResponse) {}
+    rpc AddToWhiteList(ModifyListRequest) returns (ModifyResponse) {}
+    rpc AddToBlackList(ModifyListRequest) returns (ModifyResponse) {}
+    rpc RemoveFromWhiteList(ModifyListRequest) returns (ModifyResponse) {}
+    rpc RemoveFromBlackList(ModifyListRequest) returns (ModifyResponse) {}
 }

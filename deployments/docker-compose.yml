@@ -1,0 +1,37 @@
+version: "3"
+
+services:
+    server:
+        image: antibruteforce/server
+        restart: always
+        container_name: "antibruteforce"
+        ports:
+            - 8081:8081
+        depends_on:
+            - migration
+        env_file:
+            - env/database.env
+            - env/server.env
+        environment:
+            - POSTGRES_DB_HOST=db
+    db:
+        image: postgres:12
+        container_name: "antibruteforce-db"
+        ports:
+            - "5432:5432"
+        env_file:
+            - env/database.env
+        volumes:
+            - ../build/db/init.dev.sql:/docker-entrypoint-initdb.d/init.sql
+            - database-data:/var/lib/postgresql/data/
+    migration:
+        image: antibruteforce/migrate
+        container_name: "antibruteforce-migration"
+        depends_on:
+            - db
+        env_file:
+            - env/database.env
+        environment:
+            - POSTGRES_DB_HOST=db
+volumes:
+    database-data:

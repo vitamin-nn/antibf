@@ -3,68 +3,48 @@ package grpc
 import (
 	context "context"
 	"net"
+	"time"
 
 	log "github.com/sirupsen/logrus"
-	outErr "github.com/vitamin-nn/otus_anti_bruteforce/internal/error"
 	"github.com/vitamin-nn/otus_anti_bruteforce/internal/usecase"
 	"google.golang.org/grpc"
 )
 
 type AntibruteforceServer struct {
 	rUseCase *usecase.RateLimitUseCase
+	sUseCase *usecase.SettingUseCase
 }
 
-func NewAntibruteforceServer(rUseCase *usecase.RateLimitUseCase) *AntibruteforceServer {
+func NewAntibruteforceServer(rUseCase *usecase.RateLimitUseCase, sUseCase *usecase.SettingUseCase) *AntibruteforceServer {
 	s := new(AntibruteforceServer)
 	s.rUseCase = rUseCase
+	s.sUseCase = sUseCase
 	return s
 }
 
-func (s *AntibruteforceServer) CheckRequest(ctx context.Context, req *CheckAuthRequest) (*CheckAuthResponse, error) {
-	login := req.GetLogin()
-	if login == "" {
-		return nil, outErr.ErrEmptyLogin
-	}
-
-	passwd := req.GetPassword()
-	if passwd == "" {
-		return nil, outErr.ErrEmptyPassword
-	}
-
-	ip := net.ParseIP(req.GetIp())
-	if ip == nil {
-		return nil, outErr.ErrEmptyIP
-	}
-
-	ok, err := s.rUseCase.CheckRequest(ctx, login, passwd, ip)
-	if err != nil {
-		oErr, ok := err.(outErr.OutError)
-		if !ok {
-			oErr = outErr.ErrInternal
-			log.Errorf("unknown error: %v", err)
-		}
-		resp := &CheckAuthResponse{
-			Result: &CheckAuthResponse_Error{
-				Error: oErr.Error(),
-			},
-		}
-		return resp, nil
-	}
-
-	resp := &CheckAuthResponse{
-		Result: &CheckAuthResponse_Ok{
-			Ok: ok,
-		},
-	}
-	return resp, nil
-}
-
 func (s *AntibruteforceServer) Run(addr string) error {
-	gs := grpc.NewServer()
+	gs := grpc.NewServer(unaryInterceptor())
 	l, err := net.Listen("tcp", addr)
 	if err != nil {
 		return err
 	}
 	RegisterAntiBruteforceServiceServer(gs, s)
 	return gs.Serve(l)
+}
+
+func unaryInterceptor() grpc.ServerOption {
+	return grpc.UnaryInterceptor(func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+		start := time.Now()
+		defer log.Infof(
+			"%s %v",
+			info.FullMethod,
+			time.Since(start),
+		)
+
+		resp, err := handler(ctx, req)
+		if err != nil {
+			log.Errorf("method %q throws error: %v", info.FullMethod, err)
+		}
+		return resp, err
+	})
 }

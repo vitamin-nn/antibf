@@ -3,24 +3,43 @@ ifndef $(GOPATH)
     export GOPATH
 endif
 
-build:
-	go build -o ./.bin/antibrtfrs ./cmd/antibruteforce/main.go
+run: build-docker-server build-docker-migrate
+	docker-compose -f ./deployments/docker-compose.yml up -d
+
+down:
+	docker-compose -f ./deployments/docker-compose.yml down
+
+build-docker-server:
+	docker build -f ./Dockerfile -t antibruteforce/server ./
+
+build-docker-migrate:
+	docker build -t antibruteforce/migrate ./migrate
+
+build-docker-int-tests:
+	docker build -f ./integration-test.Dockerfile -t antibruteforce/integration-tests ./
 
 test:
-	go test -race ./...
+	go test -race -short -v ./...
 
-install-deps:
+test-integration: build-docker-server build-docker-migrate build-docker-int-tests
+	./scripts/run_int_tests.sh
+
+install-lint:
 	curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $(GOPATH)/bin v1.27.0
 
-lint: #install-deps
+lint: install-lint
 	golangci-lint run ./...
 
-run:
-	go run ./cmd/antibruteforce/main.go
+build:
+	CGO_ENABLED=0 GOARCH=amd64 go build -o ./.bin/antibf
+
+run-local:
+	source ./configs/.local.env && go run . server
 
 migrate:
-	goose -dir migrations postgres "user=vdudov password=123qwe dbname=antibruteforce sslmode=disable" up
+	goose -dir migrate/migrations postgres "user=antibruteforceUser password=password dbname=antibruteforce sslmode=disable" up
 
 generate:
 	protoc -Iapi -I/usr/local/include  --go_out=plugins=grpc:internal/grpc antibruteforce.proto
-.PHONY: build
+
+.PHONY: run down test test-integration lint build run-local migrate generate

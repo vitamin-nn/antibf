@@ -1,56 +1,54 @@
 package config
 
 import (
+	"fmt"
+	"time"
+
+	"github.com/caarlos0/env/v6"
 	log "github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 )
 
-func Load(filepath string) (c *Config, err error) {
-	viper.SetConfigFile(filepath)
-	viper.SetConfigType("toml")
-	setDefaults()
-
-	err = viper.ReadInConfig()
-	if err != nil {
-		return nil, err
-	}
-
+func Load() (*Config, error) {
 	cfg := new(Config)
-	if err = viper.Unmarshal(cfg); err != nil {
+	if err := env.Parse(cfg); err != nil {
 		return nil, err
 	}
-
 	return cfg, nil
-}
-
-func setDefaults() {
-	viper.SetDefault("log.log_level", "info")
 }
 
 type Config struct {
 	Log        Log
-	GrpcServer GrpcServer `mapstructure:"grpc_server"`
+	GrpcServer GrpcServer
 	PSQL       PSQL
-	RateLimit  RateLimit `mapstructure:"ratelimits"`
+	RateLimit  RateLimit
+	WBSetting  WhiteBlackSetting
 }
 
 type PSQL struct {
-	DSN string
+	User     string `env:"POSTGRES_USER,required"`
+	Password string `env:"POSTGRES_PASSWORD,required"`
+	DB       string `env:"POSTGRES_DB,required"`
+	DBHost   string `env:"POSTGRES_DB_HOST,required"`
+	Port     int    `env:"POSTGRES_PORT,required"`
 }
 
 type Log struct {
-	LogLevel string `mapstructure:"log_level"`
+	LogLevel string `env:"LOG_LEVEL" envDefault:"info"`
 }
 
 type GrpcServer struct {
-	Addr string
+	Addr string `env:"GRPC_SERVER_ADDR,required"`
 }
 
 type RateLimit struct {
-	Login    int
-	Password int
-	IP       int
-	Duration int64
+	Login    int           `env:"RATELIMIT_LOGIN,required"`
+	Password int           `env:"RATELIMIT_PASSWORD,required"`
+	IP       int           `env:"RATELIMIT_IP,required"`
+	Duration time.Duration `env:"RATELIMIT_DURATION,required"`
+}
+
+type WhiteBlackSetting struct {
+	CacheUpdInterval time.Duration `env:"SETTING_RELOAD_INTERVAL,required"`
 }
 
 func (cfg *Config) Fields() log.Fields {
@@ -62,4 +60,8 @@ func (cfg *Config) Fields() log.Fields {
 		"rate_duration": cfg.RateLimit.Duration,
 		"log_level":     cfg.Log.LogLevel,
 	}
+}
+
+func (cpg *PSQL) GetDSN() string {
+	return fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", cpg.DBHost, cpg.Port, cpg.User, cpg.Password, cpg.DB)
 }

@@ -43,9 +43,19 @@ func (uc RateLimitUseCase) CheckRequest(ctx context.Context, login, passwd strin
 	}
 
 	// check login rate
-	// TODO: наверное, стоит все 3 проверки запускать в отдельных горутинах и при получении хотябы одного false сразу отдавать ответ
-	if !uc.rlLogin.IsAllow(login) || !uc.rlPasswd.IsAllow(passwd) || !uc.rlIP.IsAllow(ip.String()) {
+	if !uc.rlLogin.Allow(login) || !uc.rlPasswd.Allow(passwd) || !uc.rlIP.Allow(ip.String()) {
 		return false, nil
 	}
 	return true, nil
+}
+
+func (uc RateLimitUseCase) ClearRequest(ctx context.Context, login string, ip net.IP) error {
+	if login != "" {
+		uc.rlLogin.Clear(login)
+	}
+
+	if ip != nil {
+		uc.rlIP.Clear(ip.String())
+	}
+	return nil
 }

@@ -29,7 +29,7 @@ const (
 // of the legacy proto package is being used.
 const _ = proto.ProtoPackageIsVersion4
 
-type CheckAuthRequest struct {
+type CheckRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -39,8 +39,8 @@ type CheckAuthRequest struct {
 	Ip       string `protobuf:"bytes,3,opt,name=ip,proto3" json:"ip,omitempty"`
 }
 
-func (x *CheckAuthRequest) Reset() {
-	*x = CheckAuthRequest{}
+func (x *CheckRequest) Reset() {
+	*x = CheckRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_antibruteforce_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -48,13 +48,13 @@ func (x *CheckAuthRequest) Reset() {
 	}
 }
 
-func (x *CheckAuthRequest) String() string {
+func (x *CheckRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CheckAuthRequest) ProtoMessage() {}
+func (*CheckRequest) ProtoMessage() {}
 
-func (x *CheckAuthRequest) ProtoReflect() protoreflect.Message {
+func (x *CheckRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_antibruteforce_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -66,45 +66,45 @@ func (x *CheckAuthRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CheckAuthRequest.ProtoReflect.Descriptor instead.
-func (*CheckAuthRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use CheckRequest.ProtoReflect.Descriptor instead.
+func (*CheckRequest) Descriptor() ([]byte, []int) {
 	return file_antibruteforce_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *CheckAuthRequest) GetLogin() string {
+func (x *CheckRequest) GetLogin() string {
 	if x != nil {
 		return x.Login
 	}
 	return ""
 }
 
-func (x *CheckAuthRequest) GetPassword() string {
+func (x *CheckRequest) GetPassword() string {
 	if x != nil {
 		return x.Password
 	}
 	return ""
 }
 
-func (x *CheckAuthRequest) GetIp() string {
+func (x *CheckRequest) GetIp() string {
 	if x != nil {
 		return x.Ip
 	}
 	return ""
 }
 
-type CheckAuthResponse struct {
+type CheckResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
 	// Types that are assignable to Result:
-	//	*CheckAuthResponse_Ok
-	//	*CheckAuthResponse_Error
-	Result isCheckAuthResponse_Result `protobuf_oneof:"result"`
+	//	*CheckResponse_Ok
+	//	*CheckResponse_Error
+	Result isCheckResponse_Result `protobuf_oneof:"result"`
 }
 
-func (x *CheckAuthResponse) Reset() {
-	*x = CheckAuthResponse{}
+func (x *CheckResponse) Reset() {
+	*x = CheckResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_antibruteforce_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -112,13 +112,13 @@ func (x *CheckAuthResponse) Reset() {
 	}
 }
 
-func (x *CheckAuthResponse) String() string {
+func (x *CheckResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CheckAuthResponse) ProtoMessage() {}
+func (*CheckResponse) ProtoMessage() {}
 
-func (x *CheckAuthResponse) ProtoReflect() protoreflect.Message {
+func (x *CheckResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_antibruteforce_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -130,69 +130,278 @@ func (x *CheckAuthResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CheckAuthResponse.ProtoReflect.Descriptor instead.
-func (*CheckAuthResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use CheckResponse.ProtoReflect.Descriptor instead.
+func (*CheckResponse) Descriptor() ([]byte, []int) {
 	return file_antibruteforce_proto_rawDescGZIP(), []int{1}
 }
 
-func (m *CheckAuthResponse) GetResult() isCheckAuthResponse_Result {
+func (m *CheckResponse) GetResult() isCheckResponse_Result {
 	if m != nil {
 		return m.Result
 	}
 	return nil
 }
 
-func (x *CheckAuthResponse) GetOk() bool {
-	if x, ok := x.GetResult().(*CheckAuthResponse_Ok); ok {
+func (x *CheckResponse) GetOk() bool {
+	if x, ok := x.GetResult().(*CheckResponse_Ok); ok {
 		return x.Ok
 	}
 	return false
 }
 
-func (x *CheckAuthResponse) GetError() string {
-	if x, ok := x.GetResult().(*CheckAuthResponse_Error); ok {
+func (x *CheckResponse) GetError() string {
+	if x, ok := x.GetResult().(*CheckResponse_Error); ok {
 		return x.Error
 	}
 	return ""
 }
 
-type isCheckAuthResponse_Result interface {
-	isCheckAuthResponse_Result()
+type isCheckResponse_Result interface {
+	isCheckResponse_Result()
 }
 
-type CheckAuthResponse_Ok struct {
+type CheckResponse_Ok struct {
 	Ok bool `protobuf:"varint,1,opt,name=ok,proto3,oneof"`
 }
 
-type CheckAuthResponse_Error struct {
+type CheckResponse_Error struct {
 	Error string `protobuf:"bytes,2,opt,name=error,proto3,oneof"`
 }
 
-func (*CheckAuthResponse_Ok) isCheckAuthResponse_Result() {}
+func (*CheckResponse_Ok) isCheckResponse_Result() {}
 
-func (*CheckAuthResponse_Error) isCheckAuthResponse_Result() {}
+func (*CheckResponse_Error) isCheckResponse_Result() {}
+
+type ClearRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Login string `protobuf:"bytes,1,opt,name=login,proto3" json:"login,omitempty"`
+	Ip    string `protobuf:"bytes,2,opt,name=ip,proto3" json:"ip,omitempty"`
+}
+
+func (x *ClearRequest) Reset() {
+	*x = ClearRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_antibruteforce_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ClearRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ClearRequest) ProtoMessage() {}
+
+func (x *ClearRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_antibruteforce_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ClearRequest.ProtoReflect.Descriptor instead.
+func (*ClearRequest) Descriptor() ([]byte, []int) {
+	return file_antibruteforce_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *ClearRequest) GetLogin() string {
+	if x != nil {
+		return x.Login
+	}
+	return ""
+}
+
+func (x *ClearRequest) GetIp() string {
+	if x != nil {
+		return x.Ip
+	}
+	return ""
+}
+
+type ModifyListRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Ip string `protobuf:"bytes,1,opt,name=ip,proto3" json:"ip,omitempty"`
+}
+
+func (x *ModifyListRequest) Reset() {
+	*x = ModifyListRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_antibruteforce_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ModifyListRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ModifyListRequest) ProtoMessage() {}
+
+func (x *ModifyListRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_antibruteforce_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ModifyListRequest.ProtoReflect.Descriptor instead.
+func (*ModifyListRequest) Descriptor() ([]byte, []int) {
+	return file_antibruteforce_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *ModifyListRequest) GetIp() string {
+	if x != nil {
+		return x.Ip
+	}
+	return ""
+}
+
+type ModifyResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	// Types that are assignable to Result:
+	//	*ModifyResponse_Success
+	//	*ModifyResponse_Error
+	Result isModifyResponse_Result `protobuf_oneof:"result"`
+}
+
+func (x *ModifyResponse) Reset() {
+	*x = ModifyResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_antibruteforce_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ModifyResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ModifyResponse) ProtoMessage() {}
+
+func (x *ModifyResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_antibruteforce_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ModifyResponse.ProtoReflect.Descriptor instead.
+func (*ModifyResponse) Descriptor() ([]byte, []int) {
+	return file_antibruteforce_proto_rawDescGZIP(), []int{4}
+}
+
+func (m *ModifyResponse) GetResult() isModifyResponse_Result {
+	if m != nil {
+		return m.Result
+	}
+	return nil
+}
+
+func (x *ModifyResponse) GetSuccess() bool {
+	if x, ok := x.GetResult().(*ModifyResponse_Success); ok {
+		return x.Success
+	}
+	return false
+}
+
+func (x *ModifyResponse) GetError() string {
+	if x, ok := x.GetResult().(*ModifyResponse_Error); ok {
+		return x.Error
+	}
+	return ""
+}
+
+type isModifyResponse_Result interface {
+	isModifyResponse_Result()
+}
+
+type ModifyResponse_Success struct {
+	Success bool `protobuf:"varint,1,opt,name=success,proto3,oneof"`
+}
+
+type ModifyResponse_Error struct {
+	Error string `protobuf:"bytes,2,opt,name=error,proto3,oneof"`
+}
+
+func (*ModifyResponse_Success) isModifyResponse_Result() {}
+
+func (*ModifyResponse_Error) isModifyResponse_Result() {}
 
 var File_antibruteforce_proto protoreflect.FileDescriptor
 
 var file_antibruteforce_proto_rawDesc = []byte{
 	0x0a, 0x14, 0x61, 0x6e, 0x74, 0x69, 0x62, 0x72, 0x75, 0x74, 0x65, 0x66, 0x6f, 0x72, 0x63, 0x65,
-	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x54, 0x0a, 0x10, 0x43, 0x68, 0x65, 0x63, 0x6b, 0x41,
-	0x75, 0x74, 0x68, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x6c, 0x6f,
-	0x67, 0x69, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x6c, 0x6f, 0x67, 0x69, 0x6e,
-	0x12, 0x1a, 0x0a, 0x08, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x02, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x08, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x12, 0x0e, 0x0a, 0x02,
-	0x69, 0x70, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x70, 0x22, 0x47, 0x0a, 0x11,
-	0x43, 0x68, 0x65, 0x63, 0x6b, 0x41, 0x75, 0x74, 0x68, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
-	0x65, 0x12, 0x10, 0x0a, 0x02, 0x6f, 0x6b, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x48, 0x00, 0x52,
-	0x02, 0x6f, 0x6b, 0x12, 0x16, 0x0a, 0x05, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x18, 0x02, 0x20, 0x01,
-	0x28, 0x09, 0x48, 0x00, 0x52, 0x05, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x42, 0x08, 0x0a, 0x06, 0x72,
-	0x65, 0x73, 0x75, 0x6c, 0x74, 0x32, 0x50, 0x0a, 0x15, 0x41, 0x6e, 0x74, 0x69, 0x42, 0x72, 0x75,
-	0x74, 0x65, 0x66, 0x6f, 0x72, 0x63, 0x65, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x37,
-	0x0a, 0x0c, 0x43, 0x68, 0x65, 0x63, 0x6b, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x11,
-	0x2e, 0x43, 0x68, 0x65, 0x63, 0x6b, 0x41, 0x75, 0x74, 0x68, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
-	0x74, 0x1a, 0x12, 0x2e, 0x43, 0x68, 0x65, 0x63, 0x6b, 0x41, 0x75, 0x74, 0x68, 0x52, 0x65, 0x73,
-	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x08, 0x5a, 0x06, 0x2e, 0x3b, 0x67, 0x72, 0x70,
-	0x63, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x50, 0x0a, 0x0c, 0x43, 0x68, 0x65, 0x63, 0x6b, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x6c, 0x6f, 0x67, 0x69, 0x6e, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x6c, 0x6f, 0x67, 0x69, 0x6e, 0x12, 0x1a, 0x0a, 0x08,
+	0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08,
+	0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x70, 0x18, 0x03,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x70, 0x22, 0x43, 0x0a, 0x0d, 0x43, 0x68, 0x65, 0x63,
+	0x6b, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x10, 0x0a, 0x02, 0x6f, 0x6b, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x08, 0x48, 0x00, 0x52, 0x02, 0x6f, 0x6b, 0x12, 0x16, 0x0a, 0x05, 0x65,
+	0x72, 0x72, 0x6f, 0x72, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x05, 0x65, 0x72,
+	0x72, 0x6f, 0x72, 0x42, 0x08, 0x0a, 0x06, 0x72, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x22, 0x34, 0x0a,
+	0x0c, 0x43, 0x6c, 0x65, 0x61, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x14, 0x0a,
+	0x05, 0x6c, 0x6f, 0x67, 0x69, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x6c, 0x6f,
+	0x67, 0x69, 0x6e, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x70, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x02, 0x69, 0x70, 0x22, 0x23, 0x0a, 0x11, 0x4d, 0x6f, 0x64, 0x69, 0x66, 0x79, 0x4c, 0x69, 0x73,
+	0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x70, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x70, 0x22, 0x4e, 0x0a, 0x0e, 0x4d, 0x6f, 0x64, 0x69,
+	0x66, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x1a, 0x0a, 0x07, 0x73, 0x75,
+	0x63, 0x63, 0x65, 0x73, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x48, 0x00, 0x52, 0x07, 0x73,
+	0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x12, 0x16, 0x0a, 0x05, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x05, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x42, 0x08,
+	0x0a, 0x06, 0x72, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x32, 0xda, 0x02, 0x0a, 0x15, 0x41, 0x6e, 0x74,
+	0x69, 0x42, 0x72, 0x75, 0x74, 0x65, 0x66, 0x6f, 0x72, 0x63, 0x65, 0x53, 0x65, 0x72, 0x76, 0x69,
+	0x63, 0x65, 0x12, 0x28, 0x0a, 0x05, 0x43, 0x68, 0x65, 0x63, 0x6b, 0x12, 0x0d, 0x2e, 0x43, 0x68,
+	0x65, 0x63, 0x6b, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x0e, 0x2e, 0x43, 0x68, 0x65,
+	0x63, 0x6b, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x29, 0x0a, 0x05,
+	0x43, 0x6c, 0x65, 0x61, 0x72, 0x12, 0x0d, 0x2e, 0x43, 0x6c, 0x65, 0x61, 0x72, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x1a, 0x0f, 0x2e, 0x4d, 0x6f, 0x64, 0x69, 0x66, 0x79, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x37, 0x0a, 0x0e, 0x41, 0x64, 0x64, 0x54, 0x6f,
+	0x57, 0x68, 0x69, 0x74, 0x65, 0x4c, 0x69, 0x73, 0x74, 0x12, 0x12, 0x2e, 0x4d, 0x6f, 0x64, 0x69,
+	0x66, 0x79, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x0f, 0x2e,
+	0x4d, 0x6f, 0x64, 0x69, 0x66, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00,
+	0x12, 0x37, 0x0a, 0x0e, 0x41, 0x64, 0x64, 0x54, 0x6f, 0x42, 0x6c, 0x61, 0x63, 0x6b, 0x4c, 0x69,
+	0x73, 0x74, 0x12, 0x12, 0x2e, 0x4d, 0x6f, 0x64, 0x69, 0x66, 0x79, 0x4c, 0x69, 0x73, 0x74, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x0f, 0x2e, 0x4d, 0x6f, 0x64, 0x69, 0x66, 0x79, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x3c, 0x0a, 0x13, 0x52, 0x65, 0x6d,
+	0x6f, 0x76, 0x65, 0x46, 0x72, 0x6f, 0x6d, 0x57, 0x68, 0x69, 0x74, 0x65, 0x4c, 0x69, 0x73, 0x74,
+	0x12, 0x12, 0x2e, 0x4d, 0x6f, 0x64, 0x69, 0x66, 0x79, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x1a, 0x0f, 0x2e, 0x4d, 0x6f, 0x64, 0x69, 0x66, 0x79, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x3c, 0x0a, 0x13, 0x52, 0x65, 0x6d, 0x6f, 0x76,
+	0x65, 0x46, 0x72, 0x6f, 0x6d, 0x42, 0x6c, 0x61, 0x63, 0x6b, 0x4c, 0x69, 0x73, 0x74, 0x12, 0x12,
+	0x2e, 0x4d, 0x6f, 0x64, 0x69, 0x66, 0x79, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x1a, 0x0f, 0x2e, 0x4d, 0x6f, 0x64, 0x69, 0x66, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x08, 0x5a, 0x06, 0x2e, 0x3b, 0x67, 0x72, 0x70, 0x63, 0x62,
+	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -207,16 +416,29 @@ func file_antibruteforce_proto_rawDescGZIP() []byte {
 	return file_antibruteforce_proto_rawDescData
 }
 
-var file_antibruteforce_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_antibruteforce_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_antibruteforce_proto_goTypes = []interface{}{
-	(*CheckAuthRequest)(nil),  // 0: CheckAuthRequest
-	(*CheckAuthResponse)(nil), // 1: CheckAuthResponse
+	(*CheckRequest)(nil),      // 0: CheckRequest
+	(*CheckResponse)(nil),     // 1: CheckResponse
+	(*ClearRequest)(nil),      // 2: ClearRequest
+	(*ModifyListRequest)(nil), // 3: ModifyListRequest
+	(*ModifyResponse)(nil),    // 4: ModifyResponse
 }
 var file_antibruteforce_proto_depIdxs = []int32{
-	0, // 0: AntiBruteforceService.CheckRequest:input_type -> CheckAuthRequest
-	1, // 1: AntiBruteforceService.CheckRequest:output_type -> CheckAuthResponse
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	0, // 0: AntiBruteforceService.Check:input_type -> CheckRequest
+	2, // 1: AntiBruteforceService.Clear:input_type -> ClearRequest
+	3, // 2: AntiBruteforceService.AddToWhiteList:input_type -> ModifyListRequest
+	3, // 3: AntiBruteforceService.AddToBlackList:input_type -> ModifyListRequest
+	3, // 4: AntiBruteforceService.RemoveFromWhiteList:input_type -> ModifyListRequest
+	3, // 5: AntiBruteforceService.RemoveFromBlackList:input_type -> ModifyListRequest
+	1, // 6: AntiBruteforceService.Check:output_type -> CheckResponse
+	4, // 7: AntiBruteforceService.Clear:output_type -> ModifyResponse
+	4, // 8: AntiBruteforceService.AddToWhiteList:output_type -> ModifyResponse
+	4, // 9: AntiBruteforceService.AddToBlackList:output_type -> ModifyResponse
+	4, // 10: AntiBruteforceService.RemoveFromWhiteList:output_type -> ModifyResponse
+	4, // 11: AntiBruteforceService.RemoveFromBlackList:output_type -> ModifyResponse
+	6, // [6:12] is the sub-list for method output_type
+	0, // [0:6] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -229,7 +451,7 @@ func file_antibruteforce_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_antibruteforce_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CheckAuthRequest); i {
+			switch v := v.(*CheckRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -241,7 +463,43 @@ func file_antibruteforce_proto_init() {
 			}
 		}
 		file_antibruteforce_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CheckAuthResponse); i {
+			switch v := v.(*CheckResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_antibruteforce_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ClearRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_antibruteforce_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ModifyListRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_antibruteforce_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ModifyResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -254,8 +512,12 @@ func file_antibruteforce_proto_init() {
 		}
 	}
 	file_antibruteforce_proto_msgTypes[1].OneofWrappers = []interface{}{
-		(*CheckAuthResponse_Ok)(nil),
-		(*CheckAuthResponse_Error)(nil),
+		(*CheckResponse_Ok)(nil),
+		(*CheckResponse_Error)(nil),
+	}
+	file_antibruteforce_proto_msgTypes[4].OneofWrappers = []interface{}{
+		(*ModifyResponse_Success)(nil),
+		(*ModifyResponse_Error)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -263,7 +525,7 @@ func file_antibruteforce_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_antibruteforce_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
@@ -289,7 +551,12 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type AntiBruteforceServiceClient interface {
-	CheckRequest(ctx context.Context, in *CheckAuthRequest, opts ...grpc.CallOption) (*CheckAuthResponse, error)
+	Check(ctx context.Context, in *CheckRequest, opts ...grpc.CallOption) (*CheckResponse, error)
+	Clear(ctx context.Context, in *ClearRequest, opts ...grpc.CallOption) (*ModifyResponse, error)
+	AddToWhiteList(ctx context.Context, in *ModifyListRequest, opts ...grpc.CallOption) (*ModifyResponse, error)
+	AddToBlackList(ctx context.Context, in *ModifyListRequest, opts ...grpc.CallOption) (*ModifyResponse, error)
+	RemoveFromWhiteList(ctx context.Context, in *ModifyListRequest, opts ...grpc.CallOption) (*ModifyResponse, error)
+	RemoveFromBlackList(ctx context.Context, in *ModifyListRequest, opts ...grpc.CallOption) (*ModifyResponse, error)
 }
 
 type antiBruteforceServiceClient struct {
@@ -300,9 +567,54 @@ func NewAntiBruteforceServiceClient(cc grpc.ClientConnInterface) AntiBruteforceS
 	return &antiBruteforceServiceClient{cc}
 }
 
-func (c *antiBruteforceServiceClient) CheckRequest(ctx context.Context, in *CheckAuthRequest, opts ...grpc.CallOption) (*CheckAuthResponse, error) {
-	out := new(CheckAuthResponse)
-	err := c.cc.Invoke(ctx, "/AntiBruteforceService/CheckRequest", in, out, opts...)
+func (c *antiBruteforceServiceClient) Check(ctx context.Context, in *CheckRequest, opts ...grpc.CallOption) (*CheckResponse, error) {
+	out := new(CheckResponse)
+	err := c.cc.Invoke(ctx, "/AntiBruteforceService/Check", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *antiBruteforceServiceClient) Clear(ctx context.Context, in *ClearRequest, opts ...grpc.CallOption) (*ModifyResponse, error) {
+	out := new(ModifyResponse)
+	err := c.cc.Invoke(ctx, "/AntiBruteforceService/Clear", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *antiBruteforceServiceClient) AddToWhiteList(ctx context.Context, in *ModifyListRequest, opts ...grpc.CallOption) (*ModifyResponse, error) {
+	out := new(ModifyResponse)
+	err := c.cc.Invoke(ctx, "/AntiBruteforceService/AddToWhiteList", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *antiBruteforceServiceClient) AddToBlackList(ctx context.Context, in *ModifyListRequest, opts ...grpc.CallOption) (*ModifyResponse, error) {
+	out := new(ModifyResponse)
+	err := c.cc.Invoke(ctx, "/AntiBruteforceService/AddToBlackList", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *antiBruteforceServiceClient) RemoveFromWhiteList(ctx context.Context, in *ModifyListRequest, opts ...grpc.CallOption) (*ModifyResponse, error) {
+	out := new(ModifyResponse)
+	err := c.cc.Invoke(ctx, "/AntiBruteforceService/RemoveFromWhiteList", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *antiBruteforceServiceClient) RemoveFromBlackList(ctx context.Context, in *ModifyListRequest, opts ...grpc.CallOption) (*ModifyResponse, error) {
+	out := new(ModifyResponse)
+	err := c.cc.Invoke(ctx, "/AntiBruteforceService/RemoveFromBlackList", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -311,35 +623,145 @@ func (c *antiBruteforceServiceClient) CheckRequest(ctx context.Context, in *Chec
 
 // AntiBruteforceServiceServer is the server API for AntiBruteforceService service.
 type AntiBruteforceServiceServer interface {
-	CheckRequest(context.Context, *CheckAuthRequest) (*CheckAuthResponse, error)
+	Check(context.Context, *CheckRequest) (*CheckResponse, error)
+	Clear(context.Context, *ClearRequest) (*ModifyResponse, error)
+	AddToWhiteList(context.Context, *ModifyListRequest) (*ModifyResponse, error)
+	AddToBlackList(context.Context, *ModifyListRequest) (*ModifyResponse, error)
+	RemoveFromWhiteList(context.Context, *ModifyListRequest) (*ModifyResponse, error)
+	RemoveFromBlackList(context.Context, *ModifyListRequest) (*ModifyResponse, error)
 }
 
 // UnimplementedAntiBruteforceServiceServer can be embedded to have forward compatible implementations.
 type UnimplementedAntiBruteforceServiceServer struct {
 }
 
-func (*UnimplementedAntiBruteforceServiceServer) CheckRequest(context.Context, *CheckAuthRequest) (*CheckAuthResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CheckRequest not implemented")
+func (*UnimplementedAntiBruteforceServiceServer) Check(context.Context, *CheckRequest) (*CheckResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Check not implemented")
+}
+func (*UnimplementedAntiBruteforceServiceServer) Clear(context.Context, *ClearRequest) (*ModifyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Clear not implemented")
+}
+func (*UnimplementedAntiBruteforceServiceServer) AddToWhiteList(context.Context, *ModifyListRequest) (*ModifyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddToWhiteList not implemented")
+}
+func (*UnimplementedAntiBruteforceServiceServer) AddToBlackList(context.Context, *ModifyListRequest) (*ModifyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddToBlackList not implemented")
+}
+func (*UnimplementedAntiBruteforceServiceServer) RemoveFromWhiteList(context.Context, *ModifyListRequest) (*ModifyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveFromWhiteList not implemented")
+}
+func (*UnimplementedAntiBruteforceServiceServer) RemoveFromBlackList(context.Context, *ModifyListRequest) (*ModifyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveFromBlackList not implemented")
 }
 
 func RegisterAntiBruteforceServiceServer(s *grpc.Server, srv AntiBruteforceServiceServer) {
 	s.RegisterService(&_AntiBruteforceService_serviceDesc, srv)
 }
 
-func _AntiBruteforceService_CheckRequest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CheckAuthRequest)
+func _AntiBruteforceService_Check_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CheckRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AntiBruteforceServiceServer).CheckRequest(ctx, in)
+		return srv.(AntiBruteforceServiceServer).Check(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/AntiBruteforceService/CheckRequest",
+		FullMethod: "/AntiBruteforceService/Check",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AntiBruteforceServiceServer).CheckRequest(ctx, req.(*CheckAuthRequest))
+		return srv.(AntiBruteforceServiceServer).Check(ctx, req.(*CheckRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AntiBruteforceService_Clear_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ClearRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AntiBruteforceServiceServer).Clear(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/AntiBruteforceService/Clear",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AntiBruteforceServiceServer).Clear(ctx, req.(*ClearRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AntiBruteforceService_AddToWhiteList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ModifyListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AntiBruteforceServiceServer).AddToWhiteList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/AntiBruteforceService/AddToWhiteList",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AntiBruteforceServiceServer).AddToWhiteList(ctx, req.(*ModifyListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AntiBruteforceService_AddToBlackList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ModifyListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AntiBruteforceServiceServer).AddToBlackList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/AntiBruteforceService/AddToBlackList",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AntiBruteforceServiceServer).AddToBlackList(ctx, req.(*ModifyListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AntiBruteforceService_RemoveFromWhiteList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ModifyListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AntiBruteforceServiceServer).RemoveFromWhiteList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/AntiBruteforceService/RemoveFromWhiteList",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AntiBruteforceServiceServer).RemoveFromWhiteList(ctx, req.(*ModifyListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AntiBruteforceService_RemoveFromBlackList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ModifyListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AntiBruteforceServiceServer).RemoveFromBlackList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/AntiBruteforceService/RemoveFromBlackList",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AntiBruteforceServiceServer).RemoveFromBlackList(ctx, req.(*ModifyListRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -349,8 +771,28 @@ var _AntiBruteforceService_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*AntiBruteforceServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CheckRequest",
-			Handler:    _AntiBruteforceService_CheckRequest_Handler,
+			MethodName: "Check",
+			Handler:    _AntiBruteforceService_Check_Handler,
+		},
+		{
+			MethodName: "Clear",
+			Handler:    _AntiBruteforceService_Clear_Handler,
+		},
+		{
+			MethodName: "AddToWhiteList",
+			Handler:    _AntiBruteforceService_AddToWhiteList_Handler,
+		},
+		{
+			MethodName: "AddToBlackList",
+			Handler:    _AntiBruteforceService_AddToBlackList_Handler,
+		},
+		{
+			MethodName: "RemoveFromWhiteList",
+			Handler:    _AntiBruteforceService_RemoveFromWhiteList_Handler,
+		},
+		{
+			MethodName: "RemoveFromBlackList",
+			Handler:    _AntiBruteforceService_RemoveFromBlackList_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

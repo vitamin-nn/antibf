@@ -3,21 +3,43 @@ package setting
 import (
 	"context"
 	"net"
+	"time"
 
-	"github.com/vitamin-nn/otus_anti_bruteforce/internal/repository/setting/inmemory"
+	log "github.com/sirupsen/logrus"
+
+	"github.com/vitamin-nn/otus_anti_bruteforce/internal/repository/setting/cache"
 	"github.com/vitamin-nn/otus_anti_bruteforce/internal/repository/setting/psql"
 )
 
 type Setting struct {
-	inmemRepo inmemory.InMemory
-	psqlRepo  *psql.Psql
+	cache    cache.Cache
+	psqlRepo *psql.Psql
 }
 
-func NewSettingRepo(inmemRepo inmemory.InMemory, psqlRepo *psql.Psql) *Setting {
-	return &Setting{
-		inmemRepo: inmemRepo,
-		psqlRepo:  psqlRepo,
+func NewSettingRepo(ctx context.Context, psqlRepo *psql.Psql, cacheUpdInterval time.Duration) *Setting {
+	s := &Setting{
+		psqlRepo: psqlRepo,
 	}
+	err := s.UpdateCache(ctx)
+	if err != nil {
+		log.Errorf("update cache error: %v", err)
+	}
+
+	go func() {
+		ticker := time.NewTicker(cacheUpdInterval)
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case <-ticker.C:
+				err := s.UpdateCache(ctx)
+				if err != nil {
+					log.Errorf("update cache error: %v", err)
+				}
+			}
+		}
+	}()
+	return s
 }
 
 func (s *Setting) AddToWhiteList(ctx context.Context, inet *net.IPNet) error {
@@ -25,10 +47,7 @@ func (s *Setting) AddToWhiteList(ctx context.Context, inet *net.IPNet) error {
 	if err != nil {
 		return err
 	}
-	err = s.inmemRepo.AddToWhiteList(ctx, inet)
-	if err != nil {
-		return err
-	}
+
 	return nil
 }
 
@@ -37,17 +56,38 @@ func (s *Setting) AddToBlackList(ctx context.Context, inet *net.IPNet) error {
 	if err != nil {
 		return err
 	}
-	err = s.inmemRepo.AddToBlackList(ctx, inet)
-	if err != nil {
-		return err
-	}
+
 	return nil
 }
 
+func (s *Setting) DeleteFromWhiteList(ctx context.Context, inet *net.IPNet) error {
+	return s.psqlRepo.DeleteFromWhiteList(ctx, inet)
+}
+
+func (s *Setting) DeleteFromBlackList(ctx context.Context, inet *net.IPNet) error {
+	return s.psqlRepo.DeleteFromBlackList(ctx, inet)
+}
+
 func (s *Setting) CheckInWhiteList(ctx context.Context, ip net.IP) (bool, error) {
-	return s.inmemRepo.CheckInWhiteList(ctx, ip)
+	return s.cache.CheckInWhiteList(ctx, ip)
 }
 
 func (s *Setting) CheckInBlackList(ctx context.Context, ip net.IP) (bool, error) {
-	return s.inmemRepo.CheckInBlackList(ctx, ip)
+	return s.cache.CheckInBlackList(ctx, ip)
+}
+
+func (s *Setting) UpdateCache(ctx context.Context) error {
+	c := cache.NewSettingCache()
+	whiteList, err := s.psqlRepo.GetWhiteList(ctx)
+	if err != nil {
+		return err
+	}
+	blackList, err := s.psqlRepo.GetBlackList(ctx)
+	if err != nil {
+		return err
+	}
+	c.SetWhiteList(whiteList)
+	c.SetBlackList(blackList)
+	s.cache = c
+	return nil
 }
