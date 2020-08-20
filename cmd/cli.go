@@ -58,6 +58,11 @@ func getClearCmd(cfg *config.Config) *cobra.Command {
 			if ip != "" {
 				req.Ip = ip
 			}
+
+			if ip == "" && login == "" {
+				log.Fatalln("Must be set at least one param")
+			}
+
 			resp, err := grpcClient.Clear(context.Background(), req)
 			if err != nil {
 				log.Fatalf("Grpc request transport error: %v", err)
