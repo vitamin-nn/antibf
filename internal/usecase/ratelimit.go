@@ -4,8 +4,8 @@ import (
 	"context"
 	"net"
 
-	"github.com/vitamin-nn/otus_anti_bruteforce/internal/ratelimit"
-	"github.com/vitamin-nn/otus_anti_bruteforce/internal/repository/setting"
+	"github.com/vitamin-nn/antibf/internal/ratelimit"
+	"github.com/vitamin-nn/antibf/internal/repository/setting"
 )
 
 type RateLimitUseCase struct {

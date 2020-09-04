@@ -6,8 +6,8 @@ import (
 	"log"
 
 	"github.com/spf13/cobra"
-	"github.com/vitamin-nn/otus_anti_bruteforce/internal/config"
-	grpcService "github.com/vitamin-nn/otus_anti_bruteforce/internal/grpc"
+	"github.com/vitamin-nn/antibf/internal/config"
+	grpcService "github.com/vitamin-nn/antibf/internal/grpc"
 	"google.golang.org/grpc"
 )
 

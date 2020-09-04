@@ -5,7 +5,7 @@ import (
 	"net"
 
 	log "github.com/sirupsen/logrus"
-	outErr "github.com/vitamin-nn/otus_anti_bruteforce/internal/error"
+	outErr "github.com/vitamin-nn/antibf/internal/error"
 )
 
 type modifyFunc func(context.Context, *net.IPNet) error

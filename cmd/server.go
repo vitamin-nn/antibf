@@ -7,12 +7,12 @@ import (
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	"github.com/vitamin-nn/otus_anti_bruteforce/internal/config"
-	"github.com/vitamin-nn/otus_anti_bruteforce/internal/grpc"
-	"github.com/vitamin-nn/otus_anti_bruteforce/internal/ratelimit"
-	"github.com/vitamin-nn/otus_anti_bruteforce/internal/repository/setting"
-	sPsqlRepo "github.com/vitamin-nn/otus_anti_bruteforce/internal/repository/setting/psql"
-	"github.com/vitamin-nn/otus_anti_bruteforce/internal/usecase"
+	"github.com/vitamin-nn/antibf/internal/config"
+	"github.com/vitamin-nn/antibf/internal/grpc"
+	"github.com/vitamin-nn/antibf/internal/ratelimit"
+	"github.com/vitamin-nn/antibf/internal/repository/setting"
+	sPsqlRepo "github.com/vitamin-nn/antibf/internal/repository/setting/psql"
+	"github.com/vitamin-nn/antibf/internal/usecase"
 )
 
 func serverCmd(cfg *config.Config) *cobra.Command {

@@ -4,8 +4,8 @@ import (
 	"log"
 
 	"github.com/spf13/cobra"
-	"github.com/vitamin-nn/otus_anti_bruteforce/internal/config"
-	"github.com/vitamin-nn/otus_anti_bruteforce/internal/logger"
+	"github.com/vitamin-nn/antibf/internal/config"
+	"github.com/vitamin-nn/antibf/internal/logger"
 )
 
 func Execute() {

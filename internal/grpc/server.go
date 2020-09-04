@@ -6,7 +6,7 @@ import (
 	"time"
 
 	log "github.com/sirupsen/logrus"
-	"github.com/vitamin-nn/otus_anti_bruteforce/internal/usecase"
+	"github.com/vitamin-nn/antibf/internal/usecase"
 	"google.golang.org/grpc"
 )
 

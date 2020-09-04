@@ -11,7 +11,7 @@ import (
 
 	// PG driver.
 	_ "github.com/jackc/pgx/v4/stdlib"
-	outErr "github.com/vitamin-nn/otus_anti_bruteforce/internal/error"
+	outErr "github.com/vitamin-nn/antibf/internal/error"
 )
 
 const (

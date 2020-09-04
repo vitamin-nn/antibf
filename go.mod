@@ -1,4 +1,4 @@
-module github.com/vitamin-nn/otus_anti_bruteforce
+module github.com/vitamin-nn/antibf
 
 go 1.14
 

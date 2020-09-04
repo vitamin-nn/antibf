@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	log "github.com/sirupsen/logrus"
-	"github.com/vitamin-nn/otus_anti_bruteforce/internal/config"
+	"github.com/vitamin-nn/antibf/internal/config"
 )
 
 var ErrEmptyLogLevel = errors.New("empty log level error")

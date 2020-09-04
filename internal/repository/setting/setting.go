@@ -6,8 +6,8 @@ import (
 	"time"
 
 	log "github.com/sirupsen/logrus"
-	"github.com/vitamin-nn/otus_anti_bruteforce/internal/repository/setting/cache"
-	"github.com/vitamin-nn/otus_anti_bruteforce/internal/repository/setting/psql"
+	"github.com/vitamin-nn/antibf/internal/repository/setting/cache"
+	"github.com/vitamin-nn/antibf/internal/repository/setting/psql"
 )
 
 type Setting struct {
